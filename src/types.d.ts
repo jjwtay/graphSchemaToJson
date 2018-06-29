@@ -24,15 +24,26 @@ type Field = {
     isNullable?: boolean
 }
 
+type Enum = {
+    fields: string[]
+    type: string
+}
+
 type Type = {
     fields: {
         [key: string]: Field
     },
     directives: {
         [key: string]: Directive
-    }
+    },
+    type: string
 }
 
 type Types = {
-    [key: string]: Type
+    [key: string]: Types
 }
+
+type Schema = {
+    types: Types
+}
+

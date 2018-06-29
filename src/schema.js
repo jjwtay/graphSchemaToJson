@@ -150,11 +150,22 @@ export const convertFields = (fields) =>
  */
 export const convertObjectType = (type) => ({
     fields: convertFields(type.getFields()),
-    directives: convertDirectives(type)
+    directives: convertDirectives(type),
+    type: consts.OBJECT
 })
 /**
+ * @function
+ * @param {graphql.GraphQLEnumType} enumType
+ * @returns {Enum}
+ */
+export const convertEnumType = (enumType) => ({
+    fields: enumType.getValues().map(val => val.name),
+    type: consts.ENUM
+})
+/**
+ * @function
  * @param {Object.<string, graphql.GraphQLNamedType>} typeMap
- * @returns {Object.<string, Type>}
+ * @returns {Object.<string, Type | Enum>}
  */
 export const convertTypeMap = (typeMap) => {
     
@@ -163,6 +174,9 @@ export const convertTypeMap = (typeMap) => {
     Object.keys(typeMap).forEach(typeKey => {
         switch (typeMap[typeKey].constructor.name) {
 
+        case consts.GRAPHQL_ENUM_TYPE:
+            newTypeMap[typeKey] = convertEnumType(/** @type {graphql.GraphQLEnumType} */(typeMap[typeKey]))
+            break
         case consts.GRAPHQL_OBJECT_TYPE:
             newTypeMap[typeKey] = convertObjectType(/** @type {graphql.GraphQLObjectType} */(typeMap[typeKey]))
             break
@@ -174,7 +188,7 @@ export const convertTypeMap = (typeMap) => {
 }
 /**
  * @param {graphql.GraphQLSchema} schema
- * @returns {Object.<string, Type>}
+ * @returns {Object.<string, Type | Enum>}
  */
 export const schemaToJS = (schema) => convertTypeMap(schema.getTypeMap())
 
