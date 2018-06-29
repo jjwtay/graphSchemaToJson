@@ -115,18 +115,18 @@ export const convertField = (field) => {
     const getType = (field) => {
         if (field.astNode) {
             if (field.astNode.type.kind === consts.LIST_TYPE) {
-                return normalizeType(field.astNode.type.type.name.value)
+                return field.astNode.type.type.name.value
             } else if (field.astNode.type.kind === consts.NON_NULL_TYPE) {
                 if (field.astNode.type.type.kind === consts.LIST_TYPE) {
-                    return normalizeType(field.astNode.type.type.type.name.value)
+                    return field.astNode.type.type.type.name.value
                 } else {
-                    return normalizeType(field.astNode.type.type.name.value)
+                    return field.astNode.type.type.name.value
                 }
             } else {
-                return normalizeType(field.astNode.type.name.value)
+                return field.astNode.type.name.value
             }
         }
-        return normalizeType(field.type.toString)
+        return field.type.toString
     }
     
     switch (field.constructor.name) {
