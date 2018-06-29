@@ -26,7 +26,10 @@ type Field = {
 
 type Enum = {
     fields: string[]
-    type: string
+    type: string,
+    directives?: {
+        [key: string]: Directive
+    }
 }
 
 type Type = {

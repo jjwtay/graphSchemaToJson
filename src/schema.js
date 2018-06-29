@@ -34,12 +34,20 @@ export const convertDirectiveArguments = (directive) => {
 
 /**
  * 
- * @param {graphql.GraphQLNamedType | graphql.GraphQLField} type
+ * @param {graphql.GraphQLNamedType | graphql.GraphQLField | graphql.GraphQLEnumType} type
  * @return {Object.<string, Directive>}
  */
 export const convertDirectives = (type) => {
     switch (type.constructor.name) {
 
+    case consts.GRAPHQL_ENUM_TYPE:
+        if (type.astNode) {
+            return type.astNode.directives.reduce((directives, directive) => ({
+                ...directives,
+                [directive.name.value]: convertDirectiveArguments(directive)
+            }), {})
+        }
+        return {}
     case consts.OBJECT:
         if (type.astNode) {
             return type.astNode.directives.reduce((directives, directive) => ({
@@ -160,6 +168,7 @@ export const convertObjectType = (type) => ({
  */
 export const convertEnumType = (enumType) => ({
     fields: enumType.getValues().map(val => val.name),
+    directives: convertDirectives(enumType),
     type: consts.ENUM
 })
 /**
