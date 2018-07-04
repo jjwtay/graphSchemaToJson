@@ -46,3 +46,17 @@ type JSSchema = {
 }
 
 declare function schemaToJS(schema: GraphQLSchema) : JSSchema
+
+declare namespace consts {
+    const ENTITY: string
+    const ENUM: string
+    const COLUMN: string
+    const GRAPHQL_LIST: string
+    const GRAPHQL_NON_NULL: string
+    const GRAPHQL_OBJECT_TYPE: string
+    const GRAPHQL_SCALAR_TYPE: string
+    const GRAPHQL_ENUM_TYPE: string
+    const LIST_TYPE: string
+    const NON_NULL_TYPE: string
+    const OBJECT: string
+}

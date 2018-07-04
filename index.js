@@ -1,2 +1,4 @@
+import * as projectConstants from './src/consts'
+
 export { schemaToJS } from './src/schema'
-export * from './src/consts'
+export const consts = projectConstants
