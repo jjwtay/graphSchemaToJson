@@ -1,6 +1,3 @@
-export const ENTITY = 'Entity'
-export const ENUM = 'Enum'
-export const COLUMN = 'Column'
 export const GRAPHQL_LIST = 'GraphQLList'
 export const GRAPHQL_NON_NULL = 'GraphQLNonNull'
 export const GRAPHQL_OBJECT_TYPE = 'GraphQLObjectType'
