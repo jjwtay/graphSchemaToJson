@@ -1,4 +1,5 @@
-/// <reference path="./types.d.ts"/>
+/// <reference path="../index.d.ts"/>
+
 import * as consts from './consts'
 import * as graphql from 'graphql/type'
 
@@ -197,8 +198,6 @@ export const convertTypeMap = (typeMap) => {
 }
 /**
  * @param {graphql.GraphQLSchema} schema
- * @returns {Object.<string, Type | Enum>}
+ * @returns {JSSchema}
  */
 export const schemaToJS = (schema) => convertTypeMap(schema.getTypeMap())
-
-

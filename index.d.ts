@@ -1,12 +1,8 @@
-/// <reference types="graphql"/>
-
-import { GraphQLSchema } from "graphql";
-
-export type Directive = {
+type Directive = {
     [key: string]: string
 }
 
-export type Field = {
+type Field = {
     type?: string
     directives?: {
         [key: string]: Directive
@@ -15,7 +11,7 @@ export type Field = {
     isNullable?: boolean
 }
 
-export type Enum = {
+type Enum = {
     fields: string[]
     type: string,
     directives?: {
@@ -23,7 +19,7 @@ export type Enum = {
     }
 }
 
-export type Type = {
+type Type = {
     fields: {
         [key: string]: Field
     },
@@ -33,19 +29,19 @@ export type Type = {
     type: string
 }
 
-export type Types = {
+type Types = {
     [key: string]: Types
 }
 
-export type Schema = {
+type Schema = {
     types: Types
 }
 
-export type JSSchema = {
-    [key: string]: Types | Enum
+type JSSchema = {
+    [key: string]: Type | Enum
 }
 
-declare function schemaToJS(schema: GraphQLSchema) : JSSchema
+declare function schemaToJS(schema: any) : JSSchema
 
 declare namespace consts {
     const ENUM: string
