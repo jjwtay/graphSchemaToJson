@@ -1,12 +1,12 @@
-/// <reference path="graphql"/>
+/// <reference types="graphql"/>
 
 import { GraphQLSchema } from "graphql";
 
-type Directive = {
+export type Directive = {
     [key: string]: string
 }
 
-type Field = {
+export type Field = {
     type?: string
     directives?: {
         [key: string]: Directive
@@ -15,7 +15,7 @@ type Field = {
     isNullable?: boolean
 }
 
-type Enum = {
+export type Enum = {
     fields: string[]
     type: string,
     directives?: {
@@ -23,7 +23,7 @@ type Enum = {
     }
 }
 
-type Type = {
+export type Type = {
     fields: {
         [key: string]: Field
     },
@@ -33,15 +33,15 @@ type Type = {
     type: string
 }
 
-type Types = {
+export type Types = {
     [key: string]: Types
 }
 
-type Schema = {
+export type Schema = {
     types: Types
 }
 
-type JSSchema = {
+export type JSSchema = {
     [key: string]: Types | Enum
 }
 

@@ -1,6 +1,6 @@
 {
   "name": "graphschematojson",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Convert executable graphql schema to JSON.",
   "main": "index.js",
   "types": "index.d.ts",
@@ -19,7 +19,7 @@
   "homepage": "https://github.com/jjwtay/graphSchemaToJson#readme",
   "dependencies": {},
   "devDependencies": {
-    "@types/graphql": "^0.13.1",
+    "@types/graphql": "^0.13.3",
     "esm": "^3.0.55",
     "graphql": "^0.13.2",
     "graphql-import": "^0.6.0",
