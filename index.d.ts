@@ -1,32 +1,58 @@
+type GraphQLType = {
+    astNode?: {
+        directives?: GraphQLDirective[]
+    }
+}
+type GraphQLDirective = {
+    name: {
+        value: string;
+    };
+    arguments?: GraphQLArgument[]
+}
+
+type GraphQLArgumentValue = {
+    kind: string;
+    value?: any;
+    fields?: GraphQLArgument[];
+    values?: GraphQLArgumentValue[];
+}
+
+type GraphQLArgument = {
+    name: {
+        value: string;
+    };
+    value: GraphQLArgumentValue;
+}
+
+type Argument = {
+    name: string;
+    value: string | number | Argument | Argument[];
+}
+
 type Directive = {
-    [key: string]: string
+    name: string;
+    arguments: Argument[];
 }
 
 type Field = {
-    type?: string
-    directives?: {
-        [key: string]: Directive
-    },
-    isList?: boolean
-    isNullable?: boolean
+    type?: string;
+    directives?: Directive[];
+    isList?: boolean;
+    isNullable?: boolean;
 }
 
 type Enum = {
-    fields: string[]
-    type: string,
-    directives?: {
-        [key: string]: Directive
-    }
+    fields: string[];
+    type: string;
+    directives?: Directive[];
 }
 
 type Type = {
     fields: {
         [key: string]: Field
-    },
-    directives: {
-        [key: string]: Directive
-    },
-    type: string
+    };
+    directives: Directive[];
+    type: string;
 }
 
 type Types = {

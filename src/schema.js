@@ -2,6 +2,7 @@
 
 import * as consts from './consts'
 import * as graphql from 'graphql/type'
+import { getDirectives } from './directive';
 
 export const getType = (field) => {
     return field.astNode.type.name
@@ -19,54 +20,32 @@ export const filterByDirective = (name, fields) =>
     }, {})
 
 /**
- * @param {object} directive
- * @return {Object.<string, any>}
- */
-export const convertDirectiveArguments = (directive) => {
-    if (directive.arguments) {
-        return directive.arguments.reduce((obj, arg) => ({
-            ...obj,
-            [arg.name.value]: arg.value.value
-        }), {})
-    }
-
-    return {}
-}
-
-/**
  * 
  * @param {graphql.GraphQLNamedType | graphql.GraphQLField | graphql.GraphQLEnumType} type
  * @return {Object.<string, Directive>}
  */
 export const convertDirectives = (type) => {
+
     switch (type.constructor.name) {
 
     case consts.GRAPHQL_ENUM_TYPE:
         if (type.astNode) {
-            return type.astNode.directives.reduce((directives, directive) => ({
-                ...directives,
-                [directive.name.value]: convertDirectiveArguments(directive)
-            }), {})
+            return getDirectives(type)
         }
         return {}
+
     case consts.OBJECT:
         if (type.astNode) {
-            return type.astNode.directives.reduce((directives, directive) => ({
-                ...directives,
-                [directive.name.value]: convertDirectiveArguments(directive)
-            }), {})
+            return getDirectives(type)
         }
         return {}
 
     case consts.GRAPHQL_OBJECT_TYPE:
         if (type.astNode) {
-            return type.astNode.directives.reduce((directives, directive) => ({
-                ...directives,
-                [directive.name.value]: convertDirectiveArguments(directive)
-            }), {})
+            return getDirectives(type)
         }
         return {}
-        
+
     default:
         console.log('convertDirectives unhandled: ', type.constructor.name)
         return {}
