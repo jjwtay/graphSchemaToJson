@@ -166,6 +166,17 @@ export const convertInterfaceType = (interfaceType) => ({
     implements: []
 })
 /**
+ * 
+ * @param {graphql.GraphQLInputObjectType} inputType 
+ * @returns {Type}
+ */
+export const convertInputType = (inputType) => ({
+    fields: convertFields(inputType.getFields()),
+    directives: convertDirectives(inputType),
+    type: consts.INPUT,
+    implements: []
+})
+/**
  * @function
  * @param {Object.<string, graphql.GraphQLNamedType>} typeMap
  * @returns {Object.<string, Type | Enum>}
@@ -186,6 +197,8 @@ export const convertTypeMap = (typeMap) => {
         case consts.GRAPHQL_INTERFACE_TYPE:
             newTypeMap[typeKey] = convertInterfaceType(/** @type {graphql.GraphQLInterfaceType} */(typeMap[typeKey]))
             break
+        case consts.GRAPHQL_INPUT_TYPE:
+            newTypeMap[typeKey] = convertInputType(/** @type {graphql.GraphQLInputObjectType} */(typeMap[typeKey]))
         default:
             console.log(typeMap[typeKey].constructor.name)
         }
