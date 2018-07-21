@@ -36,7 +36,9 @@ type Directive = {
 
 type Field = {
     type?: string;
-    directives?: Directive[];
+    directives?: {
+        [key: string]: Directive;
+    }
     isList?: boolean;
     isNullable?: boolean;
 }
@@ -44,15 +46,20 @@ type Field = {
 type Enum = {
     fields: string[];
     type: string;
-    directives?: Directive[];
+    directives?: {
+        [key: string]: Directive
+    };
 }
 
 type Type = {
     fields: {
         [key: string]: Field
     };
-    directives: Directive[];
+    directives: {
+        [key: string]: Directive
+    };
     type: string;
+    implements: string[];
 }
 
 type Types = {

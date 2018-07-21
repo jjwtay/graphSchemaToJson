@@ -133,13 +133,15 @@ export const convertFields = (fields) =>
         [fieldKey]: convertField(fields[fieldKey])
     }), {})
 /**
+ * @function
  * @param {graphql.GraphQLObjectType} type
  * @return {Type}
  */
 export const convertObjectType = (type) => ({
     fields: convertFields(type.getFields()),
     directives: convertDirectives(type),
-    type: consts.OBJECT
+    type: consts.OBJECT,
+    implements: type.getInterfaces().map(int => int.name)
 })
 /**
  * @function
@@ -150,6 +152,18 @@ export const convertEnumType = (enumType) => ({
     fields: enumType.getValues().map(val => val.name),
     directives: convertDirectives(enumType),
     type: consts.ENUM
+})
+
+/**
+ * @function
+ * @param {graphql.GraphQLInterfaceType} interfaceType
+ * @returns {Type}
+ */
+export const convertInterfaceType = (interfaceType) => ({
+    fields: convertFields(interfaceType.getFields()),
+    directives: convertDirectives(interfaceType),
+    type: consts.INTERFACE,
+    implements: []
 })
 /**
  * @function
@@ -168,6 +182,9 @@ export const convertTypeMap = (typeMap) => {
             break
         case consts.GRAPHQL_OBJECT_TYPE:
             newTypeMap[typeKey] = convertObjectType(/** @type {graphql.GraphQLObjectType} */(typeMap[typeKey]))
+            break
+        case consts.GRAPHQL_INTERFACE_TYPE:
+            newTypeMap[typeKey] = convertInterfaceType(/** @type {graphql.GraphQLInterfaceType} */(typeMap[typeKey]))
             break
         default:
             console.log(typeMap[typeKey].constructor.name)
