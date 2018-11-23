@@ -20,7 +20,8 @@
   "homepage": "https://github.com/jjwtay/graphSchemaToJson#readme",
   "dependencies": {
     "@types/ramda": "^0.25.34",
-    "ramda": "^0.25.0"
+    "ramda": "^0.25.0",
+    "underscore.string": "^3.3.5"
   },
   "devDependencies": {
     "@types/graphql": "^0.13.3",

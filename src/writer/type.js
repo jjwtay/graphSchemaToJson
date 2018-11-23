@@ -16,9 +16,11 @@ const writeType = (
   typeObj,
   { entityName = "type", enable = {} } = {}
 ) => {
-  const { implements, directives } = typeObj;
-  const header = `${entityName} ${name}`;
-  header = enable.directives ? addDirectives(header, directives) : header;
+  const { implements, directives, decorators, directiveKeys, keys } = typeObj;
+  let header = `${entityName} ${name}`;
+  const directivesMap = directives || decorators
+  directiveKeys = directiveKeys || keys
+  header = enable.directives || enable.decorators ? addDirectives(header, directivesMap, directiveKeys) : header;
   header = enable.implements ? addImplements(header, implements) : header;
   const fields = typeObj.fields || {};
   return `${header} {\n${writeFields(fields)}\n}\n`;
@@ -35,11 +37,13 @@ const writeFields = fields => {
 };
 
 const writeField = (fieldName, fieldObj) => {
-  const { type, isNullable, isList, directives } = fieldObj;
+  const { type, isNullable, isList, directives, decorators, keys, directiveKeys } = fieldObj;
   let header = `${fieldName}: ${type}`;
+  const decoratorMap = directives || decorators
+  directiveKeys = directiveKeys || keys
   header = isNullable ? header : `${header}!`;
   header = isList ? `[${header}]` : header;
-  return addDirectives(header, directives);
+  return addDirectives(header, decoratorMap, directiveKeys);
 };
 
 export class Type extends BaseType {
@@ -81,10 +85,19 @@ export class Type extends BaseType {
   };
   
   writeField = (fieldName, fieldObj) => {
-    const { type, isNullable, isList, directives } = fieldObj;
-    let header = `${fieldName}: ${type}`;
-    header = isNullable ? header : `${header}!`;
-    header = isList ? `[${header}]` : header;
-    return this.addDirectives(header, directives);
+    const { type, isNullable, isList, directives, directiveKeys } = fieldObj;
+    let typeDef = isNullable ? type : `${type}!`;
+    typeDef = isList ? `[${typeDef}]` : typeDef;
+    let header = `${fieldName}: ${typeDef}`;   
+    return this.addDirectives(header, directives, directiveKeys);
   };
+
+  addDirectives(header, directives, directiveKeys) {
+    const dirText = createDirectiveWriter(directives).write()
+    return directiveKeys.length > 0 ? [dirText, header].join('\n') : header
+  }
+
+  createDirectiveWriter(directives) {
+    return new Directive(directives)
+  }
 }

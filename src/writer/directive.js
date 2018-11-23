@@ -1,14 +1,16 @@
 import { flattenMap } from "./util";
 
-const addDirectives = (txt, directives) =>
-  [txt, writeDirectives(directives)].join(" ");
+const addDirectives = (txt, directives, directiveKeys) =>
+  [txt, writeDirectives(directives, directiveKeys)].join(" ");
 
-const writeDirectives = directives =>
-  Object.keys(directives).reduce(directiveReducer(directives), {});
+const writeDirectives = (directives, directiveKeys) => {
+  directiveKeys = directiveKeys || Object.keys(directives);
+  return directiveKeys.reduce(directiveReducer(directives), {});
+};
 
 const directiveReducer = directives => {
   return (acc, name) => {
-    const directive = directives[name];
+    const args = directives[name];
     acc[name] = writeDirective(name, args);
     return acc;
   };
@@ -30,15 +32,14 @@ const argReducer = args => {
 const writeArg = (name, arg) => `${name}: ${argValue}`;
 
 export class Directive {
-  constructor(directives, config = {}) {
+  constructor(directives, { keys, config = {} }) {
     this.directives = directives;
+    this.keys = keys || Object.keys(directives);
+    this.config = config;
   }
 
   write = () => {
-    return Object.keys(directives).reduce(
-      this.directiveReducer(directives),
-      {}
-    );
+    return this.keys.reduce(this.directiveReducer(directives), {});
   };
 
   directiveReducer = directives => {

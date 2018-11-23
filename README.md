@@ -155,6 +155,12 @@ enum Gender {
 }
 ```
 
+Note: The writer now also supports writing a TypeScript `class`, complete with `extends` class, implements `interfaces`, decorators for class itself and fields and properties.
+
+This class writer could be used for writing classed for [TypeORM](http://typeorm.io/#/), [NestJS](https://nestjs.com/) or [TypeGraphQL](https://19majkel94.github.io/type-graphql/) etc.
+
+Note that the class writer supports passing `decorators` in place of `directives`.
+
 ## TODO
 
 - Add `directivesKeys: string[]` to `fields` since directives order matters.
