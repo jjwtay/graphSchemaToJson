@@ -10,12 +10,16 @@ export { Type, Enum, Interface, Input, ClassType, writeClasses, writeClass };
 
 export const writeToTypeDef = (jsonSchema, flatten = false) => {
   const schemaTypeMap = schemaByType(jsonSchema);
+  const types = schemaTypeMap.Object;
+  const enums = schemaTypeMap.Enum;
+  const inputs = schemaTypeMap.Input;
+  const interfaces = schemaTypeMap.Interface;
 
   const writeMap = {
-    types: writeTypes(schemaTypeMap.Object),
-    enums: writeEnums(schemaTypeMap.Enum),
-    interfaces: writeInterfaces,
-    inputs: writeInputs
+    types: writeTypes(types),
+    enums: writeEnums(enums),
+    interfaces: writeInterfaces(interfaces),
+    inputs: writeInputs(inputs)
   };
 
   // for each value
