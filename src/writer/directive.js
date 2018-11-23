@@ -28,3 +28,41 @@ const argReducer = args => {
 };
 
 const writeArg = (name, arg) => `${name}: ${argValue}`;
+
+export class Directive {
+  constructor(directives, config = {}) {
+    this.directives = directives;
+  }
+
+  write = () => {
+    return Object.keys(directives).reduce(
+      this.directiveReducer(directives),
+      {}
+    );
+  };
+
+  directiveReducer = directives => {
+    return (acc, name) => {
+      const directive = directives[name];
+      acc[name] = this.writeDirective(name, args);
+      return acc;
+    };
+  };
+
+  writeDirective = (name, args) => {
+    return `@${name}(${this.writeDirectiveArgs(args)})`;
+  };
+
+  writeDirectiveArgs = args =>
+    flattenMap(Object.keys(args).reduce(argReducer(args), {}));
+
+  argReducer = args => {
+    return (acc, name) => {
+      const argValue = args[name];
+      acc[name] = writeArg(name, argValue);
+      return acc;
+    };
+  };
+
+  writeArg = (name, arg) => `${name}: ${argValue}`;
+}
