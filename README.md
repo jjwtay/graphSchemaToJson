@@ -56,6 +56,8 @@ enum Gender {
 
 ```js
 {
+  __Schema: {
+  },
   Person: {
     fields: {
       name: {
@@ -94,8 +96,69 @@ enum Gender {
 }
 ```
 
-# TODO
+## Accessor
 
-- Add directivesKeys: string[] to fields since directives order matters.
+```js
+import { schemaToJS, accessor } from "../src/schema";
+const { schemaByType, filteredSchema } = accessor;
+/// ... generate JSON schema
+const jsSchema = schemaToJS(schema);
+
+// schema where all entries with keys starting with __ are filtered out
+const filteredMap = filteredSchema(jsSchema);
+
+// soreted by type
+const typeMap = schemaByType(jsSchema);
+console.log(typeMap);
+```
+
+```js
+{
+    Object: {
+        Person: {
+            // ....
+        }
+    },
+    Enum: {
+        Gender: {
+            // ...
+        }
+    }
+}
+```
+
+## Writer
+
+```js
+import { schemaToJS, writer } from "../src/schema";
+const { writeToTypeDef } = writer;
+/// ... generate JSON schema
+const jsSchema = schemaToJS(schema);
+
+// schema where all entries with keys starting with __ are filtered out
+const typeDef = writeToTypeDef(jsSchema);
+console.log(typeDef);
+```
+
+Should output the (original) GraphqL type def, nicely formatted:
+
+```graphql
+type Person {
+  name: String!
+  age: Int! @range(min: 0, max: 130)
+  gender: Gender!
+}
+
+enum Gender {
+  male
+  female
+}
+```
+
+## TODO
+
+- Add `directivesKeys: string[]` to `fields` since directives order matters.
+- Figure out better way to use `astNodes` than all the guards and guessing.
+- Add support for more GraphQL concepts (`Interface`, `Input`, ...) when writing type def
+- Use classes to make it easier to customize and extend the functionality
 - Clean up codebase.
-- Figure out better way to use astNodes than all the guards and guessing.
