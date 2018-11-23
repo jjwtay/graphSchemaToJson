@@ -1,9 +1,9 @@
 import { flattenMap } from "./util";
 
-const addDirectives = (txt, directives, directiveKeys) =>
+export const addDirectives = (txt, directives, directiveKeys?) =>
   [txt, writeDirectives(directives, directiveKeys)].join(" ");
 
-const writeDirectives = (directives, directiveKeys) => {
+export const writeDirectives = (directives, directiveKeys?) => {
   directiveKeys = directiveKeys || Object.keys(directives);
   return directiveKeys.reduce(directiveReducer(directives), {});
 };
@@ -29,41 +29,47 @@ const argReducer = args => {
   };
 };
 
-const writeArg = (name, arg) => `${name}: ${argValue}`;
+const writeArg = (name, argValue) => `${name}: ${argValue}`;
 
 export class Directive {
+  directives: any;
+  keys: string[];
+  config: any;
+
   constructor(directives, { keys, config = {} }) {
     this.directives = directives;
     this.keys = keys || Object.keys(directives);
     this.config = config;
   }
 
-  write = () => {
+  write() {
     return this.keys.reduce(this.directiveReducer(directives), {});
-  };
+  }
 
   directiveReducer = directives => {
     return (acc, name) => {
-      const directive = directives[name];
+      const args = directives[name];
       acc[name] = this.writeDirective(name, args);
       return acc;
     };
   };
 
-  writeDirective = (name, args) => {
+  writeDirective(name, args) {
     return `@${name}(${this.writeDirectiveArgs(args)})`;
-  };
+  }
 
   writeDirectiveArgs = args =>
-    flattenMap(Object.keys(args).reduce(argReducer(args), {}));
+    flattenMap(Object.keys(args).reduce(this.argReducer(args), {}));
 
-  argReducer = args => {
+  argReducer(args) {
     return (acc, name) => {
       const argValue = args[name];
-      acc[name] = writeArg(name, argValue);
+      acc[name] = this.writeArg(name, argValue);
       return acc;
     };
-  };
+  }
 
-  writeArg = (name, arg) => `${name}: ${argValue}`;
+  writeArg(name, arg) {
+    return `${name}: ${argValue}`;
+  }
 }

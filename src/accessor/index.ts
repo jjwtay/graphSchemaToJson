@@ -4,8 +4,8 @@ export const nonMetaKeys = jsonSchema => {
 };
 
 export const filteredSchema = jsonSchema => {
-  const nonMetaKeys = nonMetaKeys(jsonSchema);
-  return nonMetaKeys.reduce((acc, key) => {
+  const keys = nonMetaKeys(jsonSchema);
+  return keys.reduce((acc, key) => {
     acc[key] = jsonSchema[key];
     return acc;
   }, {});
