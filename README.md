@@ -159,6 +159,5 @@ enum Gender {
 
 - Add `directivesKeys: string[]` to `fields` since directives order matters.
 - Figure out better way to use `astNodes` than all the guards and guessing.
-- Add support for more GraphQL concepts (`Interface`, `Input`, ...) when writing type def
 - Use classes to make it easier to customize and extend the functionality
 - Clean up codebase.

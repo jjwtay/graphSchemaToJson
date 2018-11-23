@@ -1,15 +1,20 @@
 import { writeTypes } from "./type";
 import { writeEnums } from "./enum";
 import { schemaByType } from "../accessor";
+import { writeInterfaces } from "./interface";
+import { writeInputs } from "./input";
+import { flattenMap } from "./util";
 
-export const writeToTypeDef = jsonSchema => {
+export const writeToTypeDef = (jsonSchema, flatten = false) => {
   const schemaTypeMap = schemaByType(jsonSchema);
 
-  return {
+  const writeMap = {
     types: writeTypes(schemaTypeMap.Object),
-    enums: writeEnums(schemaTypeMap.Enum)
+    enums: writeEnums(schemaTypeMap.Enum),
+    interfaces: writeInterfaces,
+    inputs: writeInputs
   };
 
   // for each value
-  // flattenMap
+  return flatten ? flattenMap(writeMap, true) : writeMap;
 };

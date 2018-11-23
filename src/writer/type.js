@@ -1,21 +1,24 @@
 import { addDirectives } from "./directive";
 import { addImplements } from "./implements";
 
-export const writeTypes = typeMap => {
+export const writeTypes = (typeMap, write = writeType) => {
   const typeKeys = Object.keys(typeMap);
   return typeKeys.reduce((acc, name) => {
     const typeObj = typeMap[name];
-    acc[name] = writeType(name, typeObj);
+    acc[name] = write(name, typeObj);
     return acc;
   }, {});
 };
 
-const writeType = (name, typeObj) => {
+const writeType = (
+  name,
+  typeObj,
+  { entityName = "type", enable = {} } = {}
+) => {
   const { implements, directives } = typeObj;
-  const header = addDirectives(
-    addImplements(`type ${name}`, implements),
-    directives
-  );
+  const header = `${entityName} ${name}`;
+  header = enable.directives ? addDirectives(header, directives) : header;
+  header = enable.implements ? addImplements(header, implements) : header;
   const fields = typeObj.fields || {};
   return `${header} {\n${writeFields(fields)}\n}\n`;
 };
