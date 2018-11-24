@@ -99,7 +99,8 @@ enum Gender {
 ## Accessor
 
 ```js
-import { schemaToJS, accessor } from "../src/schema";
+import { schemaToJS } from "../src/schema";
+import { accessor } from "graph-schema-json-writer";
 const { schemaByType, filteredSchema } = accessor;
 /// ... generate JSON schema
 const jsSchema = schemaToJS(schema);
@@ -130,7 +131,8 @@ console.log(typeMap);
 ## Writer
 
 ```js
-import { schemaToJS, writer } from "../src/schema";
+import { schemaToJS } from "../src/schema";
+import { writer } from "graph-schema-json-writer";
 const { writeToTypeDef } = writer;
 /// ... generate JSON schema
 const jsSchema = schemaToJS(schema);
