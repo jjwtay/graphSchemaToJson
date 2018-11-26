@@ -1,4 +1,4 @@
-import * as projectConstants from './src/consts'
+import * as projectConstants from "./src/consts";
 
-export { schemaToJS } from './src/schema'
-export const consts = projectConstants
+export { schemaToJS } from "./src/schema";
+export const consts = projectConstants;
