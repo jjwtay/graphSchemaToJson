@@ -3,7 +3,7 @@ Convert graphQL Schema to readable Javascript Objects
 
 ## Example usage
 
-*Given the following graphql schema file (Note Not loaded to npm yet)*
+*Given the following graphql schema file*
 
     directive @PrimaryGeneratedColumn on FIELD_DEFINITION
 
