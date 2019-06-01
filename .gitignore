@@ -62,3 +62,7 @@ typings/
 
 test.schema.json
 test.js
+
+dist/
+output.json
+test.graphql

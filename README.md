@@ -1,170 +1,463 @@
 # graphSchemaToJson
+Convert graphQL Schema to readable Javascript Objects
 
-Convert executable graphql schema to JSON.
+## Example usage
 
-_Usage_
+*Given the following graphql schema file (Note Not loaded to npm yet)*
 
-    import { schemaToJS } from "../src/schema";
-    import { makeExecutableSchema } from "graphql-tools";
+    directive @PrimaryGeneratedColumn on FIELD_DEFINITION
 
-    const typeDefs = `
-    type Person {
-    name: String!
-    age: Int! @range(min: 0, max: 130)
-    gender: Gender!
+    directive @EntityEnum on OBJECT
+
+    type Author implements Node @Entity {
+        id: Int! @PrimaryGeneratedColumn
+        name: String! @Column(type: "varchar", length: 20)
+        books: AuthorBooksConnection @Relationship(type: "many-to-many", inverseSide: "authors") @JoinColumn
     }
 
-    enum Gender {
-    male
-    female
+    type AuthorBooksConnection {
+        first: Int
+        last: Int
+        before: String
+        after: String
+        pageInfo: PageInfo!
+        edges: [AuthorBooksEdge]
     }
-    `;
 
-    const schema = makeExecutableSchema({ typeDefs, resolvers: {} });
-    const jsSchema = schemaToJS(schema);
+    type AuthorBooksEdge {
+        cursor: String!
+        node: Book
+    }
 
-    console.log(jsSchema);
+    type PageInfo {
+        hasNextPage: Boolean!
+        hasPreviousPage: Boolean!
+        startCursor: String!
+        endCursor: String!
+    }
 
-See the `/examples` folder.
+    type Book implements Node @Entity {
+        id: Int! @PrimaryGeneratedColumn
+        title: String! @Column(type: "varchar")
+        description: String @Column(type: "varchar")
+        authors: BookAuthorsConnection @Relationship(type: "many-to-many", inverseSide: "books")
+        publisher: Publisher @Relationship(type: "many-to-one", inverseSide: "books")
+    }
 
-Run `person.ts`:
+    type BookAuthorsConnection {
+        first: Int
+        last: Int
+        before: String
+        after: String
+        pageInfo: PageInfo!
+        edges: [BookAuthorsEdge]    
+    }
 
-`$ ts-node examples/person.ts`
+    type BookAuthorsEdge {
+        cursor: String!
+        node: Author  
+    }
 
-_See Also_
+    type Publisher implements Node @Entity {
+        id: Int! @PrimaryGeneratedColumn
+        name: String! @Column(type: "varchar")
+        books: [Book] @Relationship(type: "one-to-many", inverseSide: "publisher")
+    }
 
-- [GraphQL Gen TypeORM](https://github.com/jjwtay/graphGenTypeorm) - auto graphql generation of typeorm Entity-Schema, Resolvers, graphql mutation/queries.
+    type PublisherBooksConnection {
+        first: Int
+        last: Int
+        before: String
+        after: String
+        pageInfo: PageInfo!
+        edges: [PublisherBooksEdge]    
+    }
 
-## Sample
+    type PublisherBooksEdge {
+        cursor: String!
+        node: Book  
+    }
 
-### GraphQL schema definition
+    interface Node {
+        id: ID!
+    }
 
-```graphql
-type Person {
-  name: String!
-  age: Int! @range(min: 0, max: 130)
-  gender: Gender!
-}
+*When you run this javascript file*
 
-enum Gender {
-  male
-  female
-}
-```
+    import fs from 'fs'
+    import { toSchema } from 'graphschematojson/dist'
 
-### JSON Output
+    const schema = fs.readFileSync('./test.graphql', 'utf8')
 
-```js
-{
-  __Schema: {
-  },
-  Person: {
-    fields: {
-      name: {
-        type: 'String',
-        directives: {},
-        isNullable: false,
-        isList: false
-      },
-      age: {
-        type: 'Int',
-        directives: {
-          range: {
-            min: 0,
-            max: 130
-          }
+    fs.writeFileSync('./output.json', JSON.stringify(toSchema(schema), null, 4))
+
+*The output will be*
+
+    {
+        "types": {
+            "Author": {
+                "fields": {
+                    "id": {
+                        "isNullable": false,
+                        "isList": false,
+                        "directives": {
+                            "PrimaryGeneratedColumn": {}
+                        },
+                        "type": "Int"
+                    },
+                    "name": {
+                        "isNullable": false,
+                        "isList": false,
+                        "directives": {
+                            "Column": {
+                                "type": "varchar",
+                                "length": 20
+                            }
+                        },
+                        "type": "String"
+                    },
+                    "books": {
+                        "isNullable": true,
+                        "isList": false,
+                        "directives": {
+                            "Relationship": {
+                                "type": "many-to-many",
+                                "inverseSide": "authors"
+                            },
+                            "JoinColumn": {}
+                        },
+                        "type": "AuthorBooksConnection"
+                    }
+                },
+                "directives": {
+                    "Entity": {}
+                },
+                "interfaces": [
+                    "Node"
+                ]
+            },
+            "AuthorBooksConnection": {
+                "fields": {
+                    "first": {
+                        "isNullable": true,
+                        "isList": false,
+                        "directives": {},
+                        "type": "Int"
+                    },
+                    "last": {
+                        "isNullable": true,
+                        "isList": false,
+                        "directives": {},
+                        "type": "Int"
+                    },
+                    "before": {
+                        "isNullable": true,
+                        "isList": false,
+                        "directives": {},
+                        "type": "String"
+                    },
+                    "after": {
+                        "isNullable": true,
+                        "isList": false,
+                        "directives": {},
+                        "type": "String"
+                    },
+                    "pageInfo": {
+                        "isNullable": false,
+                        "isList": false,
+                        "directives": {},
+                        "type": "PageInfo"
+                    },
+                    "edges": {
+                        "isNullable": true,
+                        "isList": true,
+                        "directives": {},
+                        "type": "AuthorBooksEdge"
+                    }
+                },
+                "directives": {},
+                "interfaces": []
+            },
+            "AuthorBooksEdge": {
+                "fields": {
+                    "cursor": {
+                        "isNullable": false,
+                        "isList": false,
+                        "directives": {},
+                        "type": "String"
+                    },
+                    "node": {
+                        "isNullable": true,
+                        "isList": false,
+                        "directives": {},
+                        "type": "Book"
+                    }
+                },
+                "directives": {},
+                "interfaces": []
+            },
+            "PageInfo": {
+                "fields": {
+                    "hasNextPage": {
+                        "isNullable": false,
+                        "isList": false,
+                        "directives": {},
+                        "type": "Boolean"
+                    },
+                    "hasPreviousPage": {
+                        "isNullable": false,
+                        "isList": false,
+                        "directives": {},
+                        "type": "Boolean"
+                    },
+                    "startCursor": {
+                        "isNullable": false,
+                        "isList": false,
+                        "directives": {},
+                        "type": "String"
+                    },
+                    "endCursor": {
+                        "isNullable": false,
+                        "isList": false,
+                        "directives": {},
+                        "type": "String"
+                    }
+                },
+                "directives": {},
+                "interfaces": []
+            },
+            "Book": {
+                "fields": {
+                    "id": {
+                        "isNullable": false,
+                        "isList": false,
+                        "directives": {
+                            "PrimaryGeneratedColumn": {}
+                        },
+                        "type": "Int"
+                    },
+                    "title": {
+                        "isNullable": false,
+                        "isList": false,
+                        "directives": {
+                            "Column": {
+                                "type": "varchar"
+                            }
+                        },
+                        "type": "String"
+                    },
+                    "description": {
+                        "isNullable": true,
+                        "isList": false,
+                        "directives": {
+                            "Column": {
+                                "type": "varchar"
+                            }
+                        },
+                        "type": "String"
+                    },
+                    "authors": {
+                        "isNullable": true,
+                        "isList": false,
+                        "directives": {
+                            "Relationship": {
+                                "type": "many-to-many",
+                                "inverseSide": "books"
+                            }
+                        },
+                        "type": "BookAuthorsConnection"
+                    },
+                    "publisher": {
+                        "isNullable": true,
+                        "isList": false,
+                        "directives": {
+                            "Relationship": {
+                                "type": "many-to-one",
+                                "inverseSide": "books"
+                            }
+                        },
+                        "type": "Publisher"
+                    }
+                },
+                "directives": {
+                    "Entity": {}
+                },
+                "interfaces": [
+                    "Node"
+                ]
+            },
+            "BookAuthorsConnection": {
+                "fields": {
+                    "first": {
+                        "isNullable": true,
+                        "isList": false,
+                        "directives": {},
+                        "type": "Int"
+                    },
+                    "last": {
+                        "isNullable": true,
+                        "isList": false,
+                        "directives": {},
+                        "type": "Int"
+                    },
+                    "before": {
+                        "isNullable": true,
+                        "isList": false,
+                        "directives": {},
+                        "type": "String"
+                    },
+                    "after": {
+                        "isNullable": true,
+                        "isList": false,
+                        "directives": {},
+                        "type": "String"
+                    },
+                    "pageInfo": {
+                        "isNullable": false,
+                        "isList": false,
+                        "directives": {},
+                        "type": "PageInfo"
+                    },
+                    "edges": {
+                        "isNullable": true,
+                        "isList": true,
+                        "directives": {},
+                        "type": "BookAuthorsEdge"
+                    }
+                },
+                "directives": {},
+                "interfaces": []
+            },
+            "BookAuthorsEdge": {
+                "fields": {
+                    "cursor": {
+                        "isNullable": false,
+                        "isList": false,
+                        "directives": {},
+                        "type": "String"
+                    },
+                    "node": {
+                        "isNullable": true,
+                        "isList": false,
+                        "directives": {},
+                        "type": "Author"
+                    }
+                },
+                "directives": {},
+                "interfaces": []
+            },
+            "Publisher": {
+                "fields": {
+                    "id": {
+                        "isNullable": false,
+                        "isList": false,
+                        "directives": {
+                            "PrimaryGeneratedColumn": {}
+                        },
+                        "type": "Int"
+                    },
+                    "name": {
+                        "isNullable": false,
+                        "isList": false,
+                        "directives": {
+                            "Column": {
+                                "type": "varchar"
+                            }
+                        },
+                        "type": "String"
+                    },
+                    "books": {
+                        "isNullable": true,
+                        "isList": true,
+                        "directives": {
+                            "Relationship": {
+                                "type": "one-to-many",
+                                "inverseSide": "publisher"
+                            }
+                        },
+                        "type": "Book"
+                    }
+                },
+                "directives": {
+                    "Entity": {}
+                },
+                "interfaces": [
+                    "Node"
+                ]
+            },
+            "PublisherBooksConnection": {
+                "fields": {
+                    "first": {
+                        "isNullable": true,
+                        "isList": false,
+                        "directives": {},
+                        "type": "Int"
+                    },
+                    "last": {
+                        "isNullable": true,
+                        "isList": false,
+                        "directives": {},
+                        "type": "Int"
+                    },
+                    "before": {
+                        "isNullable": true,
+                        "isList": false,
+                        "directives": {},
+                        "type": "String"
+                    },
+                    "after": {
+                        "isNullable": true,
+                        "isList": false,
+                        "directives": {},
+                        "type": "String"
+                    },
+                    "pageInfo": {
+                        "isNullable": false,
+                        "isList": false,
+                        "directives": {},
+                        "type": "PageInfo"
+                    },
+                    "edges": {
+                        "isNullable": true,
+                        "isList": true,
+                        "directives": {},
+                        "type": "PublisherBooksEdge"
+                    }
+                },
+                "directives": {},
+                "interfaces": []
+            },
+            "PublisherBooksEdge": {
+                "fields": {
+                    "cursor": {
+                        "isNullable": false,
+                        "isList": false,
+                        "directives": {},
+                        "type": "String"
+                    },
+                    "node": {
+                        "isNullable": true,
+                        "isList": false,
+                        "directives": {},
+                        "type": "Book"
+                    }
+                },
+                "directives": {},
+                "interfaces": []
+            }
         },
-        isNullable: false,
-        isList: false
-      },
-      gender: {
-        type: 'Gender',
-        directives: {},
-        isNullable: false,
-        isList: false
-      }
-    },
-    directives: {},
-    type: 'Object',
-    implements: []
-  },
-  Gender: {
-    fields: ['male', 'female'],
-    directives: {},
-    type: 'Enum'
-  }
-}
-```
-
-## Accessor
-
-```js
-import { schemaToJS } from "../src/schema";
-import { accessor } from "graph-schema-json-writer";
-const { schemaByType, filteredSchema } = accessor;
-/// ... generate JSON schema
-const jsSchema = schemaToJS(schema);
-
-// schema where all entries with keys starting with __ are filtered out
-const filteredMap = filteredSchema(jsSchema);
-
-// soreted by type
-const typeMap = schemaByType(jsSchema);
-console.log(typeMap);
-```
-
-```js
-{
-    Object: {
-        Person: {
-            // ....
-        }
-    },
-    Enum: {
-        Gender: {
-            // ...
+        "unions": {},
+        "interfaces": {
+            "Node": {
+                "fields": {
+                    "id": {
+                        "isNullable": false,
+                        "isList": false,
+                        "directives": {},
+                        "type": "ID"
+                    }
+                },
+                "directives": {}
+            }
         }
     }
-}
-```
-
-## Writer
-
-```js
-import { schemaToJS } from "../src/schema";
-import { writer } from "graph-schema-json-writer";
-const { writeToTypeDef } = writer;
-/// ... generate JSON schema
-const jsSchema = schemaToJS(schema);
-
-// schema where all entries with keys starting with __ are filtered out
-const typeDef = writeToTypeDef(jsSchema);
-console.log(typeDef);
-```
-
-Should output the (original) GraphqL type def, nicely formatted:
-
-```graphql
-type Person {
-  name: String!
-  age: Int! @range(min: 0, max: 130)
-  gender: Gender!
-}
-
-enum Gender {
-  male
-  female
-}
-```
-
-Note: The writer now also supports writing a TypeScript `class`, complete with `extends` class, implements `interfaces`, decorators for class itself and fields and properties.
-
-This class writer could be used for writing classed for [TypeORM](http://typeorm.io/#/), [NestJS](https://nestjs.com/) or [TypeGraphQL](https://19majkel94.github.io/type-graphql/) etc.
-
-Note that the class writer supports passing `decorators` in place of `directives`.
-
-## TODO
-
-- Add `directivesKeys: string[]` to `fields` since directives order matters.
-- Figure out better way to use `astNodes` than all the guards and guessing.
-- Clean up codebase.
