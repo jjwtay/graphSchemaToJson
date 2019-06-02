@@ -1,0 +1,4 @@
+type Author @Foo {
+    name: String!
+    Books: [Book] @Bar(baz: "bleh")
+}

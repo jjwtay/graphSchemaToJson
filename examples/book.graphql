@@ -1,0 +1,4 @@
+type Book @Bar {
+    title: String!
+    Authors: [Author]!
+}
