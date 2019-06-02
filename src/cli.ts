@@ -57,6 +57,16 @@ R.pipe(
 
         if (config.outFile.includes('.json')) {
             writeFileSync(config.outFile, JSON.stringify(toSchema(schema), null, 4))
+        } else if (config.outFile.includes('.ts')) {
+            const header = `import { Schema } from 'graphschematojson/dist'`
+            const body = `export const schema: Schema = ${JSON.stringify(
+                toSchema(schema),
+                null,
+                4
+            )}`
+            const footer = `export default schema`
+
+            writeFileSync(config.outFile, `${header}\n\n${body}\n\n${footer}`)
         } else {
             writeFileSync(
                 config.outFile,

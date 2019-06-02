@@ -1,5 +1,5 @@
 # graphSchemaToJson
-Convert graphQL Schema to readable Javascript Objects
+Convert graphQL Schema to readable Javascript/JSON/Typescript Objects
 
 ## Install
 
@@ -15,7 +15,7 @@ Convert graphQL Schema to readable Javascript Objects
 |--------|----------|---------|-------------|
 | file   | No       |         | .graphql or .gql file to use|
 | dir    | No       |         | Directory to find graphql files. Specified only if file is not used|
-| outFile| Yes      |         | Output file may end in .js or .json depending on preference.|
+| outFile| Yes      |         | Output file may end in .js  .json  or .ts depending on preference.|
 
 ## Example usage Code
 
