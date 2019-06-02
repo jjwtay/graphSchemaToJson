@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { readFileSync, writeFileSync, readdirSync } from 'fs'
 import * as R from 'ramda'
 import { toSchema } from '.'
