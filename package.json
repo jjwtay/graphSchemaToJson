@@ -1,6 +1,6 @@
 {
   "name": "graphschematojson",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "Convert executable graphql schema to JSON.",
   "main": "./dist/index.js",
   "types": "./dist/*.d.ts",
