@@ -22,6 +22,13 @@ export const convertArgument: (arg: ValueNode) => object = R.cond([
         )
     ],
     [
+        kindEquals(consts.BOOLEAN_VALUE),
+        R.pipe(
+            R.prop('value'),
+            Boolean
+        )
+    ],
+    [
         kindEquals(consts.FLOAT_VALUE),
         R.pipe(
             R.prop('value'),

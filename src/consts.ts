@@ -1,6 +1,7 @@
 export const OBJECT_TYPE_DEFININTION = 'ObjectTypeDefinition'
 export const INTERFACE_TYPE_DEFINITION = 'InterfaceTypeDefinition'
 
+export const BOOLEAN_VALUE = 'BooleanValue'
 export const ENUM = 'Enum'
 export const FLOAT_VALUE = 'FloatValue'
 export const GRAPHQL_INPUT_TYPE = 'GraphQLInputObjectType'

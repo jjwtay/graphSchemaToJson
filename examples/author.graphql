@@ -1,4 +1,5 @@
-type Author @Foo {
-    name: String!
-    Books: [Book] @Bar(baz: "bleh")
+type Author @Entity {
+    id: Int! @PrimaryGeneratedColumn
+    name: String! @Column(type: "int")
+    Books: [Book] @Relationship(type: "one-to-many", target: "Book")
 }
