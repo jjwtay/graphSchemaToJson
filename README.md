@@ -26,55 +26,11 @@ Convert graphQL Schema to readable Javascript/JSON/Typescript Objects
 
     fs.writeFileSync('./output.json', JSON.stringify(toSchema(schema), null, 4))
 
-## Example output from running npx graphqlschematojson dir=./examples outFile=./output.js
+## Examples  (outputs located in examples folder)
 
-    export default {
-        types: {
-            Author: {
-                fields: {
-                    name: {
-                        isNullable: false,
-                        isList: false,
-                        directives: {},
-                        type: 'String'
-                    },
-                    Books: {
-                        isNullable: true,
-                        isList: true,
-                        directives: {
-                            Bar: {
-                                baz: 'bleh'
-                            }
-                        },
-                        type: 'Book'
-                    }
-                },
-                directives: {
-                    Foo: {}
-                },
-                interfaces: []
-            },
-            Book: {
-                fields: {
-                    title: {
-                        isNullable: false,
-                        isList: false,
-                        directives: {},
-                        type: 'String'
-                    },
-                    Authors: {
-                        isNullable: false,
-                        isList: false,
-                        directives: {},
-                        type: 'Author'
-                    }
-                },
-                directives: {
-                    Bar: {}
-                },
-                interfaces: []
-            }
-        },
-        unions: {},
-        interfaces: {}
-    }
+    npx graphqlschematojson dir=./examples outFile=./output.js
+
+    npx graphqlschematojson dir=./examples outFile=./output.json
+
+    npx graphqlschematojson dir=./examples outFile=./output.ts
+
