@@ -28,9 +28,9 @@ Convert graphQL Schema to readable Javascript/JSON/Typescript Objects
 
 ## Examples  (outputs located in examples folder)
 
-    npx graphqlschematojson dir=./examples outFile=./output.js
+    npx graphqlschematojson dir=./examples outFile=./examples/output.js
 
-    npx graphqlschematojson dir=./examples outFile=./output.json
+    npx graphqlschematojson dir=./examples outFile=./examples/output.json
 
-    npx graphqlschematojson dir=./examples outFile=./output.ts
+    npx graphqlschematojson dir=./examples outFile=./examples/output.ts
 
